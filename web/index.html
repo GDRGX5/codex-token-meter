@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Codex Token Meter</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Codex Token Meter home">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span>Codex Token Meter</span>
+      </a>
+      <div class="language-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="zh-TW">繁中</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow">LOCAL USAGE INTELLIGENCE</p>
+        <h1 data-i18n="headline">Know where every token went.</h1>
+        <p class="hero-copy" data-i18n="subhead">A private dashboard for local Codex Desktop and CLI sessions, with API-equivalent cost estimates by model.</p>
+      </div>
+      <div class="privacy-pill">
+        <span class="privacy-dot"></span>
+        <span data-i18n="privacy">Localhost only · no chat content uploaded</span>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-labelledby="filters-title">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="section-kicker" data-i18n="filtersKicker">REPORT CONTROLS</p>
+          <h2 id="filters-title" data-i18n="filtersTitle">Choose a reporting window</h2>
+        </div>
+      </div>
+      <form id="report-form">
+        <label>
+          <span data-i18n="period">Period</span>
+          <select id="period-select">
+            <option value="today" data-i18n="today">Today</option>
+            <option value="7" data-i18n="last7">Last 7 days</option>
+            <option value="30" data-i18n="last30">Last 30 days</option>
+            <option value="date" data-i18n="specificDate">Specific date</option>
+            <option value="all" data-i18n="allHistory">All local history</option>
+          </select>
+        </label>
+        <label id="date-field" class="is-hidden">
+          <span data-i18n="date">Date</span>
+          <input id="date-input" type="date">
+        </label>
+        <button class="primary-button" type="submit">
+          <span data-i18n="runReport">Run report</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+      <p id="range-warning" class="range-warning is-hidden" data-i18n="allWarning">All history can take longer on large Codex archives.</p>
+    </section>
+
+    <section id="status-panel" class="status-panel" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <div>
+        <strong id="status-title" data-i18n="scanning">Scanning local sessions…</strong>
+        <p id="status-copy" data-i18n="scanningDetail">Large histories may take a moment. Nothing is uploaded.</p>
+      </div>
+    </section>
+
+    <section id="dashboard" class="dashboard is-hidden">
+      <div class="report-meta">
+        <span id="period-label"></span>
+        <span id="source-label"></span>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric-card accent-card">
+          <p data-i18n="totalTokens">Total tokens</p>
+          <strong id="metric-tokens">—</strong>
+          <span id="metric-tokens-full"></span>
+        </article>
+        <article class="metric-card">
+          <p data-i18n="apiEquivalent">API equivalent (USD)</p>
+          <strong id="metric-cost">—</strong>
+          <span data-i18n="estimateOnly">Estimate, not a subscription bill</span>
+        </article>
+        <article class="metric-card">
+          <p data-i18n="events">Model events</p>
+          <strong id="metric-events">—</strong>
+          <span data-i18n="eventsHint">Includes agent and tool-loop calls</span>
+        </article>
+        <article class="metric-card">
+          <p data-i18n="cacheRate">Cached input share</p>
+          <strong id="metric-cache">—</strong>
+          <span id="metric-cache-detail"></span>
+        </article>
+      </div>
+
+      <section class="data-panel daily-panel">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker" data-i18n="trendKicker">DAILY TREND</p>
+            <h2 data-i18n="dailyUsage">Daily token usage</h2>
+          </div>
+          <span class="legend"><i></i><span data-i18n="totalTokens">Total tokens</span></span>
+        </div>
+        <div id="daily-chart" class="daily-chart"></div>
+      </section>
+
+      <section class="data-panel">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker" data-i18n="modelKicker">MODEL MIX</p>
+            <h2 data-i18n="usageByModel">Usage by model</h2>
+          </div>
+          <span id="model-count" class="count-pill"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="model">Model</th>
+                <th data-i18n="events">Events</th>
+                <th data-i18n="input">Input</th>
+                <th data-i18n="cached">Cached</th>
+                <th data-i18n="output">Output</th>
+                <th data-i18n="reasoning">Reasoning</th>
+                <th data-i18n="totalTokens">Total tokens</th>
+                <th data-i18n="apiEquivalent">API equivalent (USD)</th>
+              </tr>
+            </thead>
+            <tbody id="model-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="note-panel">
+        <div class="note-mark" aria-hidden="true">i</div>
+        <div>
+          <strong data-i18n="whyLarge">Why can the total look so large?</strong>
+          <p data-i18n="whyLargeCopy">Each model call processes the active context again. Cached prefixes still count as cached-input tokens, but use a lower API rate.</p>
+        </div>
+      </section>
+
+      <footer>
+        <span id="diagnostics-label"></span>
+        <span id="pricing-label"></span>
+      </footer>
+    </section>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>
