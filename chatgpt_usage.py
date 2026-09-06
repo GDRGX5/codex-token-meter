@@ -30,7 +30,7 @@ from urllib.parse import parse_qs, urlparse
 
 
 APP_NAME = "ChatGPT / Codex Token Meter"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 DEFAULT_PRICES = Path(__file__).with_name("prices.json")
 WEB_ROOT = Path(__file__).with_name("web")
 
@@ -922,6 +922,15 @@ class DashboardHandler(BaseHTTPRequestHandler):
     web_root: Path
     cache: dict[str, tuple[float, dict[str, Any]]] = {}
 
+    def handle(self) -> None:
+        try:
+            super().handle()
+        except (BrokenPipeError, ConnectionAbortedError, ConnectionResetError):
+            # Browsers can cancel an in-flight request during refresh, navigation,
+            # or shutdown. The response can no longer be delivered, so there is
+            # nothing for this localhost server to report or retry.
+            return
+
     def send_json(self, payload: dict[str, Any], status: int = 200) -> None:
         content = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
@@ -979,6 +988,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
             )
             self.cache[cache_key] = (time.monotonic(), payload)
             self.send_json(payload)
+        except (BrokenPipeError, ConnectionAbortedError, ConnectionResetError):
+            return
         except (ValueError, argparse.ArgumentTypeError) as exc:
             self.send_json({"error": str(exc)}, status=400)
         except Exception as exc:  # Keep the local dashboard responsive on bad logs.

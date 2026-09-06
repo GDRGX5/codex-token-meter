@@ -101,8 +101,8 @@ Codex 會記錄累積用量，有時只因為速率限制資訊改變而重複�
 
 ## 價格與範圍
 
-費率放在 [`prices.json`](prices.json)，不必修改程式即可更新。目前涵蓋 GPT-5.5、
-GPT-5.6 Sol、Terra 與 Luna，包括快取輸入、GPT-5.6 快取寫入及長上下文倍率。
+費率放在 [`prices.json`](prices.json)，不必修改程式即可更新。目前涵蓋 GPT-6 Astra、
+GPT-5.5、GPT-5.6 Sol、Terra 與 Luna，包括快取輸入、快取寫入及長上下文倍率。
 
 所有成本估算統一以美元（USD）顯示。估算只包含文字 token，不包含工具呼叫、
 Web 搜尋、Computer Use、圖片、影片、語音、儲存、區域處理或其他費用。未知模型

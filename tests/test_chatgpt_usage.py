@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 MODULE_PATH = Path(__file__).parents[1] / "chatgpt_usage.py"
@@ -126,6 +127,22 @@ class MeterTestCase(unittest.TestCase):
         ) / 1_000_000
         self.assertAlmostEqual(self.catalog.estimate("gpt-5.6-sol", tokens), expected)
 
+    def test_gpt_6_astra_pricing_and_snapshot_prefix(self):
+        tokens = meter.TokenSnapshot(
+            input_tokens=300_000,
+            cached_input_tokens=100_000,
+            cache_write_input_tokens=50_000,
+            output_tokens=10_000,
+            total_tokens=310_000,
+        )
+        expected = (
+            (150_000 * 10 + 100_000 * 1 + 50_000 * 12.5) * 2
+            + 10_000 * 50 * 1.5
+        ) / 1_000_000
+        self.assertAlmostEqual(
+            self.catalog.estimate("gpt-6-astra-2026-09-01", tokens), expected
+        )
+
     def test_english_and_chinese_text_reports(self):
         self.write_fixture()
         records, diagnostics = self.records()
@@ -159,6 +176,30 @@ class MeterTestCase(unittest.TestCase):
     def test_unknown_model_is_unpriced(self):
         tokens = meter.TokenSnapshot(input_tokens=10, total_tokens=10)
         self.assertIsNone(self.catalog.estimate("unknown-model", tokens))
+
+    def test_web_handler_ignores_client_disconnect(self):
+        handler = object.__new__(meter.DashboardHandler)
+        disconnects = (
+            BrokenPipeError(),
+            ConnectionAbortedError(10053, "client aborted the connection"),
+            ConnectionResetError(10054, "client reset the connection"),
+        )
+        for error in disconnects:
+            with self.subTest(error=type(error).__name__):
+                with mock.patch.object(
+                    meter.BaseHTTPRequestHandler, "handle", side_effect=error
+                ):
+                    handler.handle()
+
+    def test_web_handler_does_not_hide_server_errors(self):
+        handler = object.__new__(meter.DashboardHandler)
+        with mock.patch.object(
+            meter.BaseHTTPRequestHandler,
+            "handle",
+            side_effect=RuntimeError("server bug"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "server bug"):
+                handler.handle()
 
 
 if __name__ == "__main__":

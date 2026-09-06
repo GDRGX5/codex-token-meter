@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0 - 2026-09-06
+
+- Added GPT-6 Astra token pricing, including cached input, cache writes, and long-context multipliers.
+- Silenced harmless localhost dashboard tracebacks when a browser cancels a response.
+
 ## 1.2.0 - 2026-08-31
 
 - Standardized all cost displays and report metadata on US dollars (USD).
