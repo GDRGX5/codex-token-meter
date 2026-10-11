@@ -30,7 +30,7 @@ from urllib.parse import parse_qs, urlparse
 
 
 APP_NAME = "ChatGPT / Codex Token Meter"
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 DEFAULT_PRICES = Path(__file__).with_name("prices.json")
 WEB_ROOT = Path(__file__).with_name("web")
 

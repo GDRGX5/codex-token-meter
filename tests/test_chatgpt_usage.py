@@ -143,6 +143,27 @@ class MeterTestCase(unittest.TestCase):
             self.catalog.estimate("gpt-6-astra-2026-09-01", tokens), expected
         )
 
+    def test_new_sol_and_luna_pricing_boundary(self):
+        # Include cached reads and writes; the surcharge starts above 272K.
+        cases = [("gpt-6.1-sol", 2, 0.1, 2.5, 10),
+                 ("gpt-6-sol", 2, 0.2, 2.5, 10),
+                 ("gpt-6-luna", 0.1, 0.01, 0.125, 0.5)]
+        for model, rate, cached, write, output in cases:
+            for count in (272000, 272001):
+                with self.subTest(model=model, input_tokens=count):
+                    tokens = meter.TokenSnapshot(
+                        input_tokens=count, cached_input_tokens=100000,
+                        cache_write_input_tokens=50000, output_tokens=10000,
+                    )
+                    cost = (count - 150000) * rate + 100000 * cached + 50000 * write
+                    expected = (cost * (2 if count > 272000 else 1)
+                                + 10000 * output * (1.5 if count > 272000 else 1)) / 1000000
+                    self.assertAlmostEqual(self.catalog.estimate(model, tokens), expected)
+                    self.assertAlmostEqual(
+                        self.catalog.estimate(model + "-2099-01-01", tokens), expected
+                    )
+        self.assertIsNone(self.catalog.find("gpt-6-unknown"))
+
     def test_english_and_chinese_text_reports(self):
         self.write_fixture()
         records, diagnostics = self.records()

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 - 2026-10-11
+
+- Added standard text-token pricing for GPT-6.1 Sol, GPT-6 Sol, and GPT-6 Luna.
+- Kept Sol generations separate to account for their different cached-input rates.
+- Included cache writes and the 272K long-context pricing boundary for all three models.
+
 ## 1.3.0 - 2026-09-06
 
 - Added GPT-6 Astra token pricing, including cached input, cache writes, and long-context multipliers.
