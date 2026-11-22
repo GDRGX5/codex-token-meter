@@ -101,7 +101,7 @@ Codex 會記錄累積用量，有時只因為速率限制資訊改變而重複�
 
 ## 價格與範圍
 
-費率放在 [`prices.json`](prices.json)，不必修改程式即可更新。目前涵蓋 GPT-6.1 Sol、
+費率放在 [`prices.json`](prices.json)。GPT-6.2 Astra、GPT-6.2 Sol、GPT-6.1 Terra 採用標準費率與 30 分鐘快取寫入價格。其他支援的模型包括 GPT-6.1 Sol、
 GPT-6 Sol、GPT-6 Luna、GPT-6 Astra、
 GPT-5.5、GPT-5.6 Sol、Terra 與 Luna，包括快取輸入、快取寫入及長上下文倍率。
 

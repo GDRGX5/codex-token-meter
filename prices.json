@@ -1,9 +1,39 @@
 {
   "currency": "USD",
   "per_tokens": 1000000,
-  "updated": "2026-10-11",
+  "updated": "2026-11-22",
   "note": "API standard text-token prices. ChatGPT subscription usage is not an API bill.",
   "models": {
+    "gpt-6.2-astra": {
+      "input": 8,
+      "cached_input": 0.4,
+      "cache_write_input": 10,
+      "output": 40,
+      "long_context_threshold": 272000,
+      "long_context_input_multiplier": 2,
+      "long_context_output_multiplier": 1.5,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.2-astra"
+    },
+    "gpt-6.2-sol": {
+      "input": 2,
+      "cached_input": 0.1,
+      "cache_write_input": 2.5,
+      "output": 10,
+      "long_context_threshold": 272000,
+      "long_context_input_multiplier": 2,
+      "long_context_output_multiplier": 1.5,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.2-sol"
+    },
+    "gpt-6.1-terra": {
+      "input": 1,
+      "cached_input": 0.05,
+      "cache_write_input": 1.25,
+      "output": 5,
+      "long_context_threshold": 272000,
+      "long_context_input_multiplier": 2,
+      "long_context_output_multiplier": 1.5,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.1-terra"
+    },
     "gpt-6.1-sol": {
       "input": 2,
       "cached_input": 0.1,

@@ -114,6 +114,7 @@ processing.
 
 Pricing references:
 
+- [GPT-6.2 Astra, GPT-6.2 Sol, and GPT-6.1 Terra](https://developers.openai.com/api/docs/pricing) use Standard rates and 30-minute cache-write pricing.
 - [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol)
 - [GPT-6 Sol](https://developers.openai.com/api/docs/models/gpt-6-sol)
 - [GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna)

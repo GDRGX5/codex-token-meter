@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 - 2026-11-22
+
+- Added standard USD estimates for GPT-6.2 Astra, GPT-6.2 Sol, and GPT-6.1 Terra, including long-context pricing.
+
 ## 1.4.0 - 2026-10-11
 
 - Added standard text-token pricing for GPT-6.1 Sol, GPT-6 Sol, and GPT-6 Luna.
